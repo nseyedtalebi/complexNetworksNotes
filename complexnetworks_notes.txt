@@ -1,0 +1,64 @@
+Complex Networks Notes
+
+Notation:
+sum(i,j,k,sum_expr) is sum from j to k with index i over sum_expr
+[A^n] is matrix exponentiation: A to the nth power
+A^T is matrix transpose of A
+
+
+
+2018-08-28:
+A graph G = (V,E) where V:nodes, E:edges,|V|=n,|E| = m
+
+Adjacency matrix:
+A:nxn
+A_ij = {1 if there exists (j,i) e E
+       {0 otherwise
+If G is undirected, A_ij = A_ji foreach i,j
+Degree of node i is # of edges incident on i
+For undirected network/graph, degree of network is:
+    -total count of 1s in adjacency matrix:
+        sum(i,1,n,sum(i,1,n,A_ij))
+density: c = (1/n)sum(1,n,A_i) = (2m/n)
+Dense networks: easier to find paths through network but comm btween nodes could interfere more easily
+Sparse networks: less contention but finding paths is slower
+Find max number of nodes that are directly connected => vertex cover
+Find max density (max num edges) => n choose 2 (pick any node, it has n-1 neighbors. Pick another, it has n-2, and so on for all nodes)
+
+Walk: more general than a path
+    a series of nodes v_1, v_2, ... , v_i where there exists an edge between v_i,v_i+1 for each i=1...n-1
+How many walks of length n are in graph G?
+    How many walks of length 2?
+        sum(p,1,n,A_ip*A_pj) for each i,j = [A^2]_ij
+    How many walks of length 3?
+        sum(p,1,n,sum(q,1,n,A_ip*A_pq*A_qj)) i,j = [A^3]_ij
+    How many walks of length r?
+        [A^r]_ij
+    How many cycles of length r that start and end on i
+        [A^r]_ii
+Tress:
+    For any two nodes, there's only one path between
+    It's possible to have n-1 edges but fail to have a tree
+    Trees are fragile for use with routing: imagine removing one edge from the root to a subtree - that whole subtree is inaccessible!
+    However, they are also efficient since there's only one path for each pair of nodes
+        Can mitigate the fragility by having nodes remember connections to "siblings"
+
+Directed Networks:
+Edges have direction, adjacency matrix is no longer necessarily symmetric
+    ex. If our nodes are papers and edges citations
+    Cocitation matrix:
+        For papers i,j,k:
+        i<------k------->j
+            c_ij = sum(1,n,k,A_ik*A_jk)
+            (Cocitation matrix) C = c_ij foreach(i,j=1...n) = AA^T
+    Bibliographic Coupling:
+        For papers i,j,k:
+        i------->k<-------j
+        b_ij = sum(k,1,n,A_ki*A_kj)
+        (Bibliographic coupling matrix) B = b_ij foreach(i,j=1...n)
+For next time: directed acyclic graphs (DAGs)
+    
+            
+
+
+    
