@@ -57,8 +57,65 @@ Edges have direction, adjacency matrix is no longer necessarily symmetric
         b_ij = sum(k,1,n,A_ki*A_kj)
         (Bibliographic coupling matrix) B = b_ij foreach(i,j=1...n)
 For next time: directed acyclic graphs (DAGs)
-    
-            
 
+2018-08-30:
+DAGs
+G = (V,E)
+Reordering:
+V = {v_1,v_2,...} -> v_1',v_2',v_3',...
+such that (v_i',v_j') element of E for i<j
+
+DFS: depth-first search
+Each node has these atributes:
+    -V.pi: parent of V
+    -V.visited: been visited or not?
+    Extra properties (in addition to the standard DFS things above):
+    -V.start: start time of visit of node V
+    -V.end: end time of visit of node V
+Algorithm:
+
+DFS(G):
+    for v in V:
+        v.pi = nil
+        v.visited = false
+        v.start = v.end = {}
+    t=0
+    for v in V where v.visited==false:
+        DFS_VISIT(G,v)
+    return nodes (optionally order by v.end desc)
+    
+DFS_VISIT(G,v):
+    t++
+    v.start = t
+    v.visited = true
+    for q where isAdjacent(q,v):
+        if q.visited == false:
+            q.pi = v
+            DFS_VISIT(G,q)
+    t++
+    v.end = t
+            
+DFS is O(|V|+|E|) and the sort is at best O(|V|log|V|), so overall complexity depends on whether the graph is dense or sparse (|E| can be O(|V|^2)
+
+Strongly-connected components:
+G=(V,E) a directed graph
+C a maximal (NOT THE SAME AS MAXIMUM SET) subset of V, foreach v,q elements of C
+There is a path v -> q (and q -> v)
+In undirected graphs, all connected components are strongly connected
+
+Transpose (of a graph G):
+    G^T =(V,E^T)
+    E^T = {(v,q) if (q,v) in E}
+
+Algorithm to find strongly-connected components:
+SCC(G):
+    DFS(G)
+    Calculate G^T
+    DFS(G^T) picking starting nodes in order by end times set in previous step
+    return DFS trees
+The set of DFS trees returned is also the set of strongly connected components!
+
+
+    
 
     
