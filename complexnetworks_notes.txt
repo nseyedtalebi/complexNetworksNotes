@@ -115,7 +115,77 @@ SCC(G):
     return DFS trees
 The set of DFS trees returned is also the set of strongly connected components!
 
-
+2018-09-04:
+Shortest path:
+    G=(V,E), v_1,v_2 in V  v_1,v_2 in E w(v_1,v_2) in IR+
+    w(v_1,v_2) in IR+
+    Optimality principle:
+    |-----P------|
+    v-----Z------q
+      p_1    p_2
+      
+      w(P) = delta(v,q)
+      need to look up proof - proceeds by contradiction
+      
+Shortest path tree:
+    foreach e in E, w(e) = c (all weights are constant c)
+    Just do BFS. Each level is another multiple of c (c,2c,3c...)
+    ******Shortest-path tree != minimum spanning tree******
+    Djikstra's can do this too
     
+Shortest-path: Floyd-Warshall
+    W:n x n, n = |V|)
+    switch(W[i,j]){
+        case i=j: 0
+        case w(i,j): (v_i,v_j) in E
+        else: infinity
+    }
+    Intermediate Vertex: every node except source and destination
+    path P = (v_1,v_2,...,v_k-1,v_k)
+    Vertices are numbered 1,2,3,...n
+    Consider a subset of the vertices {1,...,k}. Let P be the shortest path between two nodes i,j using only the nodes in {1,...,k} as intermediate nodes
+    Two cases: does k appear as an intermediate vertex in P?
+        if no: in P->all intermediate vertices are in {1,...,k-1}
+                    ->the shortest path using {1,...,k-1} as intermediate nodes is also the shortest path using {1,...,k}
+        if yes: k is an intermediate node in P:
+            i----k-----j
+              P_1  P_2
+              P_1,P_2 are shortest paths
+               k cannot be in P_1,P_2 or they wouldn't be shortest paths otherwise
+               intermediate nodes between i,j must be in {1,...,k-1}
+               
+    Let d(i,j,k) means "shortest-path weight between i and j using nodes {1,...,k-1}
+    Base case:k=0
+        d(i,j,0) = W[i,j]
+    Inductive case:
+        d(i,j,k) = min( d(i,j,k-1), d(i,k,k-1)+d(k,j,k-1) )
+    
+    Predecessor Matrix:
+        PI:n x n
+        switch( PI[i,j] ):
+          case i=j: NIL
+          case no path from i to j: NIL
+          else: predecessor of j in the sp (shortest path) from i  
+    
+    def Print_SP(PI,i,j):
+        if i == j:
+            Print'i''
+            return
+        if PI[i,j] == NIL:
+            return
+        Print_SP(PI,i,PI[i,j])
+        Print''j''
+        
+    Base case like before k=0
+    Inductive case: min( PI(i,j,k-1), PI(k,j,k-1) )
+
+    FW(W,n){ #look up the rest online
+        d(i,j,0) = W[i,j]
+        PI(i,j,0) (like our base case)
+        for k in 1...n:
+            new matrices d(i,j,k) and PI(i,j,k)
+            for i in 1...n:
+                for j in 1...n:
+                    if d(i,j,k-1
 
     
