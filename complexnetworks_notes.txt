@@ -183,9 +183,67 @@ Shortest-path: Floyd-Warshall
         d(i,j,0) = W[i,j]
         PI(i,j,0) (like our base case)
         for k in 1...n:
-            new matrices d(i,j,k) and PI(i,j,k)
+            new matrices d(i,j,k) and PI(i,j,k
             for i in 1...n:
                 for j in 1...n:
                     if d(i,j,k-1
+                    <incomplete>
 
+*****2018-9-6*****
+Knapsack 0-1:
+    Set of items A = {a_1,a_2,...,a_n}
+    Item a_i have value v_i
+    Item a_i has weight w_i
+    Knapsack with capacity B
+    Problem: Which items maximize the total value but total weight <= B
+    Solution looks like: S^* = argmax(S subeset of A) sum(i,a_i in S,,v_i) such that sum(i,a_i in S,,i,w_i) < B
+    One can often model NP-Hard problems as ILP problems but the reverse is not generally true
+    0-1 Integer Linear Programming (ILP): x_i = 1 if a_i in S^* else 0
+    So we want max of sum(i,1,n,x_i*v_i) such that sum(i,1,n,x_i*w_i) <= B
+        x_i element of {0,1} (set) which is NOT the same as saying [0,1] (interval)
+
+    Do this with a dynamic programming approach:
+    T: n x B
+    T[i,J] = *VALUE* of the optimum soln by considering the first i elements in a {a_1,...,a_i} and a knapsack with capacity J
+    What are the base cases?
+        T[0,J] = 0 for j in 1...B
+        T[i,0] = 0 for i
+    Now, how to find T[i,J]?
+        if w_i > J: T[i-1,J]
+        else:
+            max(v_i + T[i-1,J-w_i] #if a_i is included
+            ,T[i-1,J]) #i not included
     
+    def KnapsackDP(A,B):
+        T[i,0]=T[0,J]=0 for i in 1..n,J in 1..B
+        for i in i..n:
+            for J in 1..B:
+                if w_i> J:
+                    T[i,J] = T[i-1,J]
+                else:
+                    T[i,J] = max{T[i-1,J], v_i + T[i-1,J-w_i]}
+        return T[n,B]
+    
+    Algorithm above does not give you the list of items, just the best total weight for a given subset
+    Introduce something extra to find the list:
+    
+    def Print_knapsack(A,T,i,J):
+        if T[i,J] = v_i + T[i-1,J-w_i]:
+            print(A[i])
+            Print_knapsack(A,T,i-1,J-w_i)
+        else:
+            Print_knapsack(A,T,i-1,J)
+            
+Knapsack 0-1 with Dependencies:
+    Use the same variable names as before and add:
+    G = (A,E)
+    (i,J) in E -> a_i provides its value in the solution only if J is part of the solution
+    How do we write an objective function to solve this with ILP? Can't just reuse the one shown before... 
+    z_i = 1 if a_i provides a value (all dependencies are satisfied) else 0
+    So now our objective function is:
+        max(i,1,n,v_i*z_i)
+    Constraints:
+        z_i <= x_i foreach i
+        z_i <= z_J foreach (i,J) in E
+        sum(i,1,n,x_i*w_i) <= B
+        z_i,x_i in {0,1}
