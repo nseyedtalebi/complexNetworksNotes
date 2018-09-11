@@ -247,3 +247,65 @@ Knapsack 0-1 with Dependencies:
         z_i <= z_J foreach (i,J) in E
         sum(i,1,n,x_i*w_i) <= B
         z_i,x_i in {0,1}
+        
+2018-09-11:
+Maximum Flow:
+    Say we have a network with two special nodes:
+        S: source
+        T: destination
+    Edges in this network have capacities
+    So the question is: what is the maximum amount of data that can be transmitted by S and accepted by T
+    Definition: 
+    A flow network is a directed graph
+    For each edge (u,v) in E,c(u,v)>=0
+        (u,v) in E => (v,u) not in E
+        (u,v) not in E => c(u,v) = 0
+        two special nodes s,t, s!=t
+        For v in V \ {s,t} there exists a path s~v~t
+
+    Def: A flow is a function:
+        f: V x V => IR
+        f(u,v) == amount of flow through edge (u,v)
+        0 <= f(u,v) <= c(u,v)
+        sum(v,V,f(u,v)) = sum(v,V,f(v,u)) for u in V \ {s,t}
+    Def: value of a flow |f| = sum(v,V,f(s,v)) - sum(v,V,f(v,s))
+    
+    Linear Programming for max flow:
+        Decision variables: f(u,v) foreach u,v in V
+        Constraints: 
+            c(u,v),E,s,t
+            max(sum(v,V,f(s,v) - f(v,s)))
+            0 <= f(u,v) <= c(u,v)
+            sum(v,V,f(u,v)) = sum(v,V,f(v,u))
+        Keep in mind that a single flow that can take multiple paths. It's more like water than packets in that regard. 
+    ***ALGORITHM***
+    Can solve with Ford-Fulkerson algoirthm
+        That one's also good for finding maximum bipartite matching
+    def: residual network:
+        given a flow network G and a flow f, the residual network G_f:
+            same nodes as G
+            For (u,v) in E:
+                cf(u,v) = c(u,v) - f(u,v) (residual capacity)
+            if f(u,v) > 0, add an edge (v,u) in G_f with capacity c=f(u,v).
+    def: augmenting path:
+        Given a flow network G=(V,E) and a flow f, an augmenting path is a simple path from s to t in G_f
+        For augmenting path P, cf(P) is the minimum{(u,v) in P|cf(u,v)}
+        f_P(u,v) = cf(P) if (u,v) in P else 0
+        f'(u,v) = f(u,v) + f_P(u,v) if (u,v) in E else 0
+        
+    def FloydFulkerson(G,s,t):
+    [f(u,v) = 0 for (u,v) in e]
+    while there exists path P from s to t in G_f:
+        select a path P from s to t in G-f
+        cf(P) = min{cf(u,v) s.t. (u,v) in G_f}
+        for (u,v) in P:
+            if (u,v) in E:
+                (u,v).f = (u,v).f - cf(P)
+            else:
+                (U,v).f = (u,v).f-G_f(P)
+        recalculate G_f
+        
+    Def: Cut (in a flow network): a partition of V is S and T such that s in S and t in T
+    Capacity of a cut (S,T): sum(u,S,sum(v,T,c(u,v))) (capacity of all edges through the cut)
+    
+    
