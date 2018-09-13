@@ -308,4 +308,77 @@ Maximum Flow:
     Def: Cut (in a flow network): a partition of V is S and T such that s in S and t in T
     Capacity of a cut (S,T): sum(u,S,sum(v,T,c(u,v))) (capacity of all edges through the cut)
     
+2018-9-13: Guest lecture on Stochastic Geometry
+****need to look a lot up, I lacked statistical knowledge to really follow along*****
+What is a spatial point process?
+    -Fill in later
+    For these procs, we only care about number of points and where they are
+Binomial point process (BPP): superposition of N independent uniformly distributed points on the set A
+    "What's the probability that we have k points in a given subset of A (looks like the a box since we are considering a subset of 2-d real numbers)
+Void probability: look it up
+How to test equivalence?
+    If they have same void probabilities (look up)
+Stationary point process: distr is invariant w.r.t. translations
+    Cannot be defined on a subset of R^2 - why not though??
+Stationary Poisson Point Process (PPP):
+    most widely used model for spatial location of nodes
+    no dependence between node locations
+    Can be completely characterized by a single number lambda, the density
+    Density is the expectation of the # pts of any set A
+
+Lemma: A is a subset of R^2. Conditioned on the number of points phi(A), the points are independently and uniformly distributed in the set A, i e the points form a BPP
+How to simulate?
+    # point in A is poisson rnd var with mean lambda
+Distance properties:
+    First contact distribtion: the CCDF of the dist of the nearest point of the process from the origin denoted by D is P(D>=r) = exp(-\lambda\pir^2)
+N-th closest point? Look up
+Campbell's theorem (look up)
+Example: apply Cambell's to find mean and variance of interference (like w cell phones or wifi)
+    Interference at location y in R^2 is I(y) = sum(x,x in \pih,l(x-y)) where l(x) is the path loss function
+Lemma: probability generating functional (PGFL):
+    Let \phi be a PPP of density \lambda and f(x): R^2 -> [0,1] (incomplete)
+Transformation of PPP: Independent thinning
+    let \phi be a ppp of density \lambda
+    1. a node x in \phi is colored red with probability p and blue with probability 1-p
+    2. (more steps)
+Matern hard-core process: dependent thinning
+
+Reduced Palm probability:notion of a typical point i.e. conditioning on the existence of an ode at a particulr location
+    What's the nearest-neighbor distribution function?
+    Can be interpreted as a spatial average
+    Slivnyak thm: reduced palm distr of a PPP equals the original distribution
+
+Applications
+Cellular networks
+    Interference is the main challence in cell networks
+        SINR (signal+interference noise ratio) more important than SNR (signal to noise ratio)
+        BS cooperation and other interference-suppression techniques require good models for other-cell interference
+    Networks are becoming unplanned and decentralized
+        Picocells placed strategically
+        femotcells/relays being placed randomly
+        BS deployments increasingly driven by capacity needs rather than coverage needs
+    Proposed model: PPP base stations
+        advantages:
+            non-uniform cell sizes
+            tractable? Yes, but usu reqs numerical soln
+        disadvantages:
+            base stations might get very close
+    Use first contact distribution
+    condition on the dist to nearest BS r
+        find probability that SINR is >= some \theta
+    Turns out that adding base stations does not increase coverage probability (bc. of interference!)
+    Often have to solve numerically
+    Frequency reuse:
+        frequency planning necessary to increase coverage (bc interference, remember??)
+        Model as PPP with random allocation of freq bands
+        Corresponds to a thinning of a PPP \phi
+    Coverage vs (ergodic) rate: coverage increases with \delta (# of freq bands) while average rate descreases with \delta
+Heterogeneous Networks:
+    System model:
+        k tier network
+        the bs locations in tier i are modeled by a ppp \phi i
+        all tiers transmit in same freq band
+    Max SIR model:
+        A mobile user can connect to a BS of any tier provided taht the SIR constraint is satisfied: to conect to a bs of tier i, the SIR should be greater than \theta_iss
     
+         
