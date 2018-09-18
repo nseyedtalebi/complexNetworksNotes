@@ -381,4 +381,62 @@ Heterogeneous Networks:
     Max SIR model:
         A mobile user can connect to a BS of any tier provided taht the SIR constraint is satisfied: to conect to a bs of tier i, the SIR should be greater than \theta_iss
     
-         
+2018-09-17
+Green communication systems for smart cities
+
+REvisit - shortest path problem: single-source, all pairs
+Optimality priciple: If P(u,v) is a shortest path from node u to node v, then
+Restricted shortest path: each edge has a weight and an additional metric c(e)
+	The goal is to determine the least-weight path such that the sum of the additional metric is bounded by a predefined constant C
+NP-Hard, proof by reduction from partition or knapsack
+Other variants: bottleneck shortest-path, balanced shortest-path, minimum-deviation shortest path
+
+Smart and Connected Community (SCC)
+	Why? Social and environmental sustainability
+	Connectivity between devices and to the internet is crucial
+	How to support connectivity in rural area without lots of expensive infrastructure? 
+	Issues with SCC:
+		economic: not cost-effective to invest in dedicated infrastructure, High operating costs
+		Sustainability: ICT devices produce lots of CO2, spectrum scarcity
+	Feasible solution?
+		Use a network of ixed or mobile cyber-physical devices connected via wireless links
+		No additional infrastructure cost
+	Current wireless options:
+		short-range like bluetooth, wifi in unlicensed bands (2.4, 5GHz)
+		Long-range cellular technologies like 3/4G, GSM, LTE, LTE-A operating in licensed spectrum
+		These are not an effective solution because they are not energy-efficient, cost-effective, and can't provide QoS guarntees
+	How about using different parts of the spectrum for different applications?
+	For example: low bit rate, low power for VoIP and high bitrate and high power for video
+	If we use the spectrum intelligently by matching the EM characteristics to the application, we can solve the problems with current offerings
+
+Dynamic Spectrum Access (DSA)
+	Allows wireless devices to opportunistically access unoccupied bands (whitespace or spectrum holes), originally licensed on condition of non-interference to the primary licensees
+	Empty channels within a certain spectrum band is liable to be accessed for data communictions.
+	Advantages:
+		Break away from the policy constraint
+		overcome problem of over/underprovisioning
+		Allowed by (or in memoranda) by US FCC in:
+			TV band (54-698 MHz)
+			LTE Band (900 Mhz, 1700-2100 MHz)
+			CBRS band
+			ISM band
+	Optimal Band Selection
+	Objective: determine optimal TTL constrained energ-efficient (TcE) path for any given message m<S,D,L,T> that maximizes energy efficiency and meets the TTL
+	NP-Hard: reduction from Restricted Shortest Path (RSP) problem
+	Soln 1: select a path p(u,v) bt selecting a locally optimal band at each node in the network
+	Soln 2: Select a path p(u,v) by selecting the best homogeneous bank at each node in the network
+	Neither is optimal!
+	Proposed TcE solution: use dynamic programming
+	a combination of Floyd-Warshall alg and DP solution of the knapsack problem
+	Use 3-D adjacency matrix that includes info about reachability w.r.t. the extra constraint
+	If path P is an energy-efficient path between i and j with some intrmediate node k, the paths from i to k and from k to j are also energy-efficient by the optimality principle
+	
+proposed TcE algorithm:
+	1. Init matrix W^(0,t) to A[i,j,k]
+		Uses a combined metric H = \beta*w^(j)_ij + (1-\beta)*w^(j)_ij
+	2. TcE path via band selection
+		Pseudopolynomial run time
+DSA enabled architecture for SCCs: only suitable for decision-making with non-real-time deadlines
+Optimal TcE path algorithm: pseudopolynomial dynamic programming alg
+Can design a poly-time approx alg or suitable heuristic?
+What if DSA is a time-varying graph? There are soltions for that too 
