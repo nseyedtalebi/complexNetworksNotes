@@ -439,4 +439,53 @@ proposed TcE algorithm:
 DSA enabled architecture for SCCs: only suitable for decision-making with non-real-time deadlines
 Optimal TcE path algorithm: pseudopolynomial dynamic programming alg
 Can design a poly-time approx alg or suitable heuristic?
-What if DSA is a time-varying graph? There are soltions for that too 
+What if DSA is a time-varying graph? There are soltions for that too
+
+2018-09-20
+Multicommodity Flow Problem
+	Flow network G = (V,E)
+	Edge capacity c(u,v) (u,v) in E
+	k demand (s_i,t_i,d_i): src s_i, dest t_i, demand d_i, s_i, t_i in V
+	f_i(u,v):fraction of flow i=1,...,k that goes through edge (u,v) in E
+	f_i(u,v) in [0,1]
+	Send a unit of flow over edge (u,v), you pay a cost \delta(u,v). Could be different for different edges
+	Objective: route all of the demand from source to destination while minimizing the cost
+
+LP Formulation
+	We want to minimize the cost. Start with one flow:
+	Cost for demand i: sum((u,v),V,sum(i,1..k,f_i(u,v)*d_i*\delta(u,v)))
+	sum(v,V,f_i(u,v)) = sum(v,V,f_i(v,u)) for u,i in V\{s_i,t_i},1..k
+	0 <= sum(i,1..k,f_i(u,v)*d_i) <= c(u,v)
+	sum(v,V,f_i(s_i,v)) - sum(v,V,f_i(v,s_i)) = 1
+	sum(v,V,f_i(v,t_i)) - sum(v,V,f_i(t_i,v)) = 1
+Potential variants (constraints except objective remain the same unless otherwise noted)
+	For each path per flow => f_i(u,v) in {0,1}
+	Utilization of (u,v) in E:
+		U(u,v) = sum(i,1..k,f_i(u,v)*d_i) / c(u,v)
+		min sum((u,v),E,U(u,v))
+	Max flow: max(sum(i,1..k,d_i))
+	
+Max Bipartite Matching
+	h_1 people,h_2 tasks
+	for each task there are some people tht complete the task
+	Each person can complete only one task
+	We want ot assign people to tasks to maximize the number of tasks completed
+	Bipartite graph G = (L \cup R,E)
+	L: set of people
+	R: set of tasks
+	L and R disjoint
+	E \subset L x R
+	(u,v) \in E, u \in L, v \in R
+	Person u can complete task v
+	We are looking for a matching M \subset E \for v \in L \cup R \exists at most one edge in M incident to V
+	Matching can be maximal: cannot be extended
+	Maximum matching: maximum cardinality
+	How to find max? Flow network
+	
+Use Flow Network to Find Maximal Bipartite Matching:
+directed edges from L to R
+two special nodes s,t
+add edges (s,v) \for v \in L
+add edges (v,T) \for v \in R
+Set capacities of all edges to 1
+Use existing algs for flow networks
