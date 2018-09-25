@@ -489,3 +489,49 @@ add edges (s,v) \for v \in L
 add edges (v,T) \for v \in R
 Set capacities of all edges to 1
 Use existing algs for flow networks
+
+2018-09-25:
+How do we determine which nodes in a network are "important" (ofc varies on application)?
+One way: centrality metrics
+	Degree Centrality: Distribution of degree: D(x) = # of nodes with degree x / total # of nodes
+	In undirected network, avg degree is 2m / n for a given G=(V,E) and m = |E| and n = |V|
+
+	Eigenvector Centrality: importance of node is proportional to the importance of its neighbors
+	iterative algorithm
+	x(0) = 1 for each node
+	x_i(1) = sum(j,1..n,t_ij*x_j(0))
+	x_t(t) = A^t*x(0) where A is the adjacency matrix
+Recap of Eigenvectors and Eigenvalues:
+	Given a matrix A:n x n,a value \lambda is an eigenvalue for t if \exists a vector v s.t. A*v = \lambda*v, v nonzero
+	(A - \lambda*I)v = 0 where I is the n x n identity matrix
+	p(\lambda) = det(A - \lambda I)
+	eigenvalues are the roots of p(\lambda)
+	The set of eigenvectors of t are linearly independent:
+	(a vector over all nodes in G) x(0) = sum(i,1..n,c_i*v_i)
+	x(t) = A^t * sum(i,1..n,c_i*v_i)
+	= sum(i,1..n,c_i * \lambda_i^t * v_i)
+	= \lambda_1^t * sum(i,1..n,c_i * [\lambda_i / \lambda_1]^t * v_i)
+	x(t) = \lambda_1^t * c_1 * v_1 + sum(i,2..n,c_i * [\lambda_i / \lambda_1]^t * v_i
+	The bracketed term tends to zero as t grows, so first term is most important
+	x_i = (1 / \lambda) * sum(j,1..n,A_ij * x_j)
+	So eigenvector centrality: x_i / d_i
+
+Closeness Centrality
+	d_ij is the shortest-path distance from i to j
+	mean distance e_i = (1/n) * sum(j,1..n,d_ij)
+	closeness centrality: c_i = 1 / e_i = n / (sum(j,1..n,d_ij))
+	If the graph has more than one connected component, then we define the closeness centrality over each component
+
+Betweenness Centrality: 
+	Say we have a communication network in which nodes generate traffic
+	Traffic is sent to all nodes in the network
+	Betweenness centrality tells us how much traffic goes through a certain node
+	=> it's proportional to the number of shortest paths through that node
+  More formally:
+	(n^i)_(s,t) = 1 if i is in the shortest path between S and T
+		       = 0 otherwise
+	x_i = sum(s and t, V,n^i_(s,t)
+	Maximum value: n^2 - (n-1) where n = |V|
+	Minimum value: (n-1) + (n-1) + 1 = 2n - 1
+	f_st = number of shortest-paths between s and t
+	x_i = sum(s and t, V, n^i_(s,t) / f_st)
