@@ -535,3 +535,62 @@ Betweenness Centrality:
 	Minimum value: (n-1) + (n-1) + 1 = 2n - 1
 	f_st = number of shortest-paths between s and t
 	x_i = sum(s and t, V, n^i_(s,t) / f_st)
+
+2018-09-27:
+Centrality metrics in Directed Networks
+	A * x = \lambda_1 * x
+	outdegree: xA=\lambda*x (left eigenvectors)
+	indegree: Ax = \lambda * x (right eigenvectors)
+	The nodes that have nonzero eigenvectors must either be part of a strongly-connected component of the graph or have an in-edge from a strongly-connected component
+
+Katz centrality:
+	Each node has a minimum centrality \Beta
+	x_i = \xi * sum(j,1..n,A_ij * x_j + \Beta), \xi , \Beta > 0
+	x = \xi * A*x + \Beta*@ where @ is the identity vector with dimension n
+	=(I - \xi*A)^-1
+	\xi < \lambda_1 where \lambda_1 is the leading right eigenvalue.
+
+Page Rank:
+	x_i = \xi * sum(j,1..n,A_ij * (x_j / k_j^out) + \Beta where k_j^out is the outdegree of k_j
+	x = \xi * A * D^-1 * x + \Beta*@
+	...
+	x = D(D-\xi * A)^-1 * @
+	Setting \xi = 0.85 to start gives good results
+
+Optimization over matroids (Whitney, 1935)
+Definitions:
+	*Independence system: a pair (U,s) where U is the universe set, |U| < \infinity and S \subset 2^U or S is a subset of the  powerset of U such that:
+		S contains the empty element
+		if x \subset y, y \in S => x \in S
+		e.g. U = {v_1,v_2,...,v_n}
+		U contains the subsets of U that are linearly independent
+	*A basis B is a maximal independent subset of U
+	i.e. B \in S, x \in U\B, B+x \notin S
+	*A modular set function is a function  f:2^U -> \mathbb{R} is modular for each x \subset U, f(x) = sum(x,X,f({x}))
+	e.g. if we have a set of edges, a modular set function might return the sum of the weight of the edges in the input set
+	*Given X \subset U, the *rank* of X = max{|y| s.t. y \subset X, y \in S}
+	*A *Matroid* M = (U,S) is an independent system s.t. if x,y \in S, and |x| > |y| then:
+	\exists x \in X\Y s.t. x+y \in S
+	In a matroid all basis have the same cardinality
+PROBLEM: given a matroid M = (U,S) and a modular function f: 2^U -> \mathbb{R}, find the basis with minimum cost. Usually S is *not* given and is usually HUGE.
+GREEDY ALGORITHM SOLUTION:
+X = {}
+Sort U = {u_1,u_2,...,u_n} s.t. f(u_1) <= f(u_2) <= ... <= f(u_n)
+for i in 1..n:
+	if x+u_i \in S: #can add to the set, calculate the rank, see if it changes
+		x = x U {u_i}
+	return x
+The algorithm works no matter the context. Very general and powerful!
+How do we use it? The goal is to prove that our problem can be represented by a matroid so we can use the generalized greedy algorithm.
+
+Problem: Given an undirected graph G = (V,E) and a weight function w:E->\mathbb{R}, find a subset Q of the edges s.t. foreach vertex v \in V, there exists (v,u)\in W and W(Q) is minimum. In other words, we want a subset of the edges with minimum weight, or the *minimum spanning tree*
+
+Kruskal's algorithm:
+	Q = {}
+	Sort edges by increasing weight
+	for i in 1..m:
+		if Q U {e_i} does not create a cycle, add the edge to Q
+
+The Generalized greedy algorithm finds an optimum soltuion iff it is a matroid
+For next class: prove that min. spanning tree is a matroid
+For my own edification: look up Prim's algorithm. Is it connected to matroids somehow?
