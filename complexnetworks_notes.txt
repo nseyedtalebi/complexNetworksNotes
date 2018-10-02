@@ -594,3 +594,45 @@ Kruskal's algorithm:
 The Generalized greedy algorithm finds an optimum soltuion iff it is a matroid
 For next class: prove that min. spanning tree is a matroid
 For my own edification: look up Prim's algorithm. Is it connected to matroids somehow?
+
+2018-10-02
+Proof that min spanning tree is a matroid:
+	(U,S_G), G = (V,E)
+	U = E
+	S_G \subset 2^U set that contains all subsets of edges that do not create a cycle
+	{} \in S_G
+	Given X \subset Y \subset 2^U, if Y \in S_G then X \in S_G by contradiction
+Matroid:
+	X,Y \in S_G, s.t. |X| < |Y| => there exists y in Y such that x+y in S_G
+	Split into cases:
+	1. if exists y in Y\X s.t. y=(u,v) s.t. u or v are not spanned by an edge in X
+		=> x+y in S_G
+	2.Otherwise, all nodes spanned by Y are also spanned by X
+		we know Y,X is a forest of k_y,k_x trees
+		2.1. If there exits an edge Y in Y\X, y = (u,v) s.t. u and v belong to different trees in X
+	=>x+y in S_G
+		2.2 x,y span the same set of nodes and for each edge (u,v) in y, u and v belong to the same tree in X
+	if this were true, X and Y would have the same cardinality. This contradicts the intial assumption that |X| < |Y|
+
+Activity selection problem
+	Set of activites A = {a_1,a_2,...,a_n}. Activity a_i has start time t_i and end time e_i and [s_i,e_i)
+	Two activities overlap a_i,a_j overlap
+Problem: find the maximum number of activities that can be scheduled without overlap
+Solution (that isn't exponential): order activities by end time, pick in order so that we don't have overlap
+Is this a matroid? Try to prove it:
+	(A,S_A) where A is set of activity, S_A is all subsets of A containing non-overlapping activities
+	As before, first show that it is an independent system
+	1. empty set in S_A -> trivially true, no overlap possible in empty set
+	2. given X subset Y, if Y in S_A, then X in S_A
+	Matroid: X,Y in S_A, |X| < |Y| => there exists y in Y s.t. X+y in S_A
+
+Submodular functions
+	Modular functions: proportional returns
+	Submodular functions: diminishing returns
+	Def: A function f: 2^U -> \mathbb{R} is submodular if for each A subset B subset U, and e in U\B:
+		f(A+e)-f(A) >= f(B+e)-f(A)
+	Equivalently, for each A,B subset U:
+		f(A union B)+f(A intersect B) <= f(A) + f(B)
+	
+	 
+
