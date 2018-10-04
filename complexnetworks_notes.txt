@@ -633,6 +633,34 @@ Submodular functions
 		f(A+e)-f(A) >= f(B+e)-f(A)
 	Equivalently, for each A,B subset U:
 		f(A union B)+f(A intersect B) <= f(A) + f(B)
-	
-	 
 
+2018-10-04
+Optimization of submodular functions
+	see above defs
+	Def: a function f: 2^U -> \mathbb{R} is monotone if for each A subset B subset U, f(A) <= f(B)
+Examples of submodular functions:
+	weighted average
+rank functions of matroids
+	given a matroid M = (U,S)
+	Given V subet of U:
+	f(V) = max{|Q| s.t. Q subset V and Q in S}
+More examples of submodular functions
+	Cut capacity functions in a graph
+		G = (V,E)
+		c: E -> |R+
+		A cut is S subset V, the boundary of which is: \delta S {(u,v) s.t. (u,v) in E and u in S and v in V\S}
+		f(S) = sum((u,v),\delta S,c(u,v))
+		f({}) != f(V)
+properties:
+	linear combination: given n submodular functions f_1,f_2,...,f_n and \xi_1,...,\xi_n in |R+, then we can say f(S) = sum(i,n,\xi_i*f_i(S)
+	f is submodular iff -f is supermodular
+	truncation: given a submodular function g, f(S) = min{g(S),c} for each c} is also submodular
+	If f is submodular, concanve function \phi, \phi(f(S))
+Minimization of submodular function
+	problem: given a submodulr function f:2^U -> |R+
+	Find a set S^* subset U s.t. foreach Q subset U, f(S^*) <= f(Q)
+	Def: given a function f{0,1}^N -> |R+, that is: all possible vectors of length N with either zero or one
+	f^L[0,1]^N -> |R+ f^L(x) = sum(i,0..n,\lambda_i * f(S_i))
+	{} = S_0 C S_1 C S_2...C S_n, sum(i,1..n,\lambda_i * |I_si) = x, \lambda_i >=0
+	f^L is convex iff f is submodular
+	a min for f^L could be found
