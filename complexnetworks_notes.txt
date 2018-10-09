@@ -664,3 +664,60 @@ Minimization of submodular function
 	{} = S_0 C S_1 C S_2...C S_n, sum(i,1..n,\lambda_i * |I_si) = x, \lambda_i >=0
 	f^L is convex iff f is submodular
 	a min for f^L could be found
+
+2018-10-09
+Submodular maximization
+	NP-HARD
+	Given a submodular function f:2^U -> |R, we want to find:
+	max(f(S)) where S subset U s.t. |S| <= k
+	(can also include a constraint like sum(x,x in S,w(x)) <= B)
+	if f({}) = 0 then f is monotone
+	solve with greedy algorithm
+
+def GreedySubmodMax(f,U,k):
+	S0 = {}
+	for i in 1..k:
+		v = argmax(v in U\S,f(S[i-1]+v)-f(S[i-1]))
+		S[i] = S[i-1] + v
+
+Theorem (Niemhouser '78):
+	f(s_k)>= 1 - (1/e) * max(s,|s|<=k ^ s subset U,f(s))
+Theorem, Krause 2005:
+	Modular weight function w:2^U -> |R
+	given S subset U, w(S) = sum(x,x in S,w(x))
+	f(s_k) >= (1 - 1/e) * 0.5 *  max(s,|s|<=k ^ s subset U,f(s))
+	Can use this to find approx solution for Knapsack 0-1
+
+Random Graphs
+	Erdos-Renyi model:
+	  fix two parameters
+	    number of nodes n
+	    probability p in [0,1] of having an edge between two nodes
+	    probability of a given graph G with n nodes and m edges:
+	      P(G) = p^m(1-P)^((n choose 2)-m)
+	  Expected # of graphs with m edges <m>:
+	    number of graphs with m edges ((n choose 2) choose m)
+	    P(m) = ((n choose 2) choose m)*p^m*(1-p)^((nC2 - m))
+	    <m> = sum(m,0..nC2,m*P(m) = nC2 * P
+	  Mean degree <d> of a vertex:
+	    <k> = 2*m/n = 2<m>/n = (2/n)*(nC2 * p) = (n-1)p
+	  Degree Distribution
+	    Given a set of k vertices, probability that a node is connected to these vertices is:
+	  	p^k(1-p)^(n-1-k)
+	    All possible set of vertices without the node itself:
+		(n-1)Ck
+	    Thus, P(d=k) = (n-1Ck)p^k(1-p)^(n-1-k)
+	  Consider:
+	    n->inf
+	    mean degree is constant
+	    <k> = c = (n-1)*p
+	    p = c/(n-1)
+	    ln((1-p)^(n-1-k)) = (n-1-k)ln(1-p)
+	    Use Taylor approx for RHS:
+		if log(1-x) = -sum(n,1..inf,x^n/n) then log(1-(c/n-1)) = -c/(n-1)
+	    sub in Taylor approx to RHS to get:
+		=(n-1-k)*c/(n-1)=-c
+	    (1-p)^(n-1-k) approx equal to e^-c
+	    Recall we have P(d=k) = (n-1C2)*p^k(1-p)^(n-1-k) (binomial distribution)
+	    now, sub our approximation into the expression above to get:
+		=(n-1C2)*p^k*e^-c (Poisson distribution)
