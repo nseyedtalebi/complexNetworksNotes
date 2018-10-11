@@ -721,3 +721,60 @@ Random Graphs
 	    Recall we have P(d=k) = (n-1C2)*p^k(1-p)^(n-1-k) (binomial distribution)
 	    now, sub our approximation into the expression above to get:
 		=(n-1C2)*p^k*e^-c (Poisson distribution)
+
+2018-10-11
+Giant component
+n,p as defined in previous section on Random Graphs
+	p=0 no edge,n components
+	p=1 n(n-1)/2, 1 component, size is n
+	giant=component size grows with the size of the network
+	degree constant c: p=c/(n-1)
+	Let m be the average fraction of verticies that do not belong to the GC (giant component).
+vertex i does not belong to the GC if foreach J if:
+	1)i is not connected to J OR
+	2)i connected to J and J is not in the GC
+	u = (1-p + up)^(n-1)
+	  = (1-p(1-u))^(n-1)
+	  = (1- (c/(n-1))(1-u))^(n-1) = RHS
+    ln u  = ln(RHS)
+	  = (n-1)ln(1- (c/(n-1))(1-u))
+	  use Taylor approx. for ln(1-x) again on RHS to get rid of ln then simplify
+        u = e^-c(1-u)
+	It is hard to find a closed-form solution for the above equation but we can use graphical techniques like this:
+	S = fraction of nodes in the GC
+	S = 1-u
+	S = 1-e^(-cS)
+	y = 1-e^-(cS)
+	Can use to find the size of the smaller components, distribution of smaller components
+	Diameter d:
+	d = ln(n) / ln(c)
+
+Degree distribution
+	D(x) = # of nodes with degree x / total number of nodes
+	ln(D(x)) = e^(-2*ln(x)+c)
+	D(x) = e^(-2*ln(x)+c) = e^(ln(x^-2)+c)
+	     = e^ln(x^-2)*e^c*c
+	D(x) = x^-2 * c
+	Look up: Scale-free networks
+Cumulative Degree Distribution:
+	|P(x >= k) = sum(r,k..inf,D(r))
+	approx equal to: c* integral(k,inf,r^-\xi * dr)
+	eval intgral and simplify to get:
+	c/(\xi - 1) * k^-(\xi - 1)
+Preferential attachment:
+	Happens when you have networks that grow over time
+		-citation network
+		-Internet
+		-WWW
+	First model (Pzime '60) citation networks
+	Nodes are papers
+	A new papers cites on average c existing papers
+	A new paper cite an existing paper with a probability proportional to its in-degree plus a small constant
+	Intuitively, you end up with a few papers that get tons of citations and many with few or no citations. "Rich get richer"
+	Berebesi-Albert Model ('90)
+		-undirected network
+		-nodes are added one by one
+		-each node adds c edges
+		prob. of connecting a new node to node i (degree d_i):
+		P_i = d_i / sum(J,V,d_J)
+		|P(d_i = k) = k^-3
