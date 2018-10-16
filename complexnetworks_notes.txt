@@ -774,7 +774,35 @@ Preferential attachment:
 	Berebesi-Albert Model ('90)
 		-undirected network
 		-nodes are added one by one
-		-each node adds c edges
+		 -each node adds c edges
 		prob. of connecting a new node to node i (degree d_i):
 		P_i = d_i / sum(J,V,d_J)
 		|P(d_i = k) = k^-3
+
+2018-10-16
+Interference graph - nodes are transceivers, edges link pairs of nodes that can't communicate at the same time. That is, if they both try to talk at the same time, they will interfere.
+Maximum independent set
+  Def: given an undirected graph G = (V,E), a set of verticies S \subseteq V is independent if there are no adjacent nodes in the set. Alternatively, {\forall u,v \in S:(u,v) \notin E}
+  Def An independent set S \subseteq V is maximal if \forall V\S, S\cup {v} is not independent
+  Def Maximum independent set max|S| S\subseteq V s.t. S is independent
+  This problem is NP-HARD
+  Try an Integer Linear Programming approach (ILP):
+  x_i = 1 if node i is in selected set or 0 otherwise
+  Objective: maximize sum of x_i
+  One constraint for each edge: x_i+x_j <=1 foreach (i,j) \in E
+  Heuristic Algorithm:
+    S = {}
+    while G is not empty:
+      pick any node v
+      S = S \cup {v}
+      Remove v from G with all its neighbors (edges and other nodes it's connected to and all of the edges that those nodes touch.i.e. nodes one hop away include all edges that any of these nodes touch)
+  Note that this heuristic is terrible when the graph is a star.  Optimal soln in that case is n-1 but this algorithm would return 1
+  We can improve upon it by choosing a v from G with minimum degree
+  Theorem: The algorithm above returns an idependent set S such that |S| >= n/(\delta + 1) where \delta is the max degree of a node in G
+  Proof: we want to find a bound for V \ S
+  A node is in V\S if it was a neighbor of a selected node
+  \forall v \in S the max number of rmoved nodes is at most \delta
+  |V/S| <= \delta |S|
+  |S| + |V/S| = n
+  n - |S| <= \delta |S|
+  n <= |S|(1 + \delta)
