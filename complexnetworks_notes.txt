@@ -806,3 +806,65 @@ Maximum independent set
   |S| + |V/S| = n
   n - |S| <= \delta |S|
   n <= |S|(1 + \delta)
+
+2018-10-18
+More on optimization problems
+Vertex Cover
+\forall v \in V, v is either a clusterhead or in direct communication with a clusterhead
+Def: Given G = (V,E) a vertex cover is a set s \subseteq V st \forall (u,v) \in E: u \in S or V \in S
+
+ILP
+Objective: find minimal vertex cover S
+Constraints: we have x_i where i=0...|V|, where x_1=1 if v_i \in S or 0 otherewise
+x_i+x_j>=1 \forall (i,j) \in E
+x_i = {0,1}
+
+A simple algorithm: Pick a node that has an uncovered edge and add it to S. Repeat until finished.
+
+A better algorithm:
+def VertexCover(G):
+  S = {}
+  while E != 0:
+    pick any (u,v) \in E
+    S = {u,v} \cup S
+    delete all edges incident to u and v
+  return S
+
+Thm: The algorithm above returns a vertex cover
+Proof: An edge is removed only if at least one of the endpoints is in S, so it is not possible to have an uncovered edge when VertexCover() terminates.
+Thm: The set S returned by the algorithm is such that |S| <= 2 * optimal_solution
+Proof: The algorithm returns a maximal matching if we pick k edges in the while loop
+|S| = 2k
+Consider any vertex cover including the optimum: should have at least k vertices
+This implies that |optimum| >= k
+
+LP-Relaxation:
+  x_i \in [0,1] instead of x_1 \in {0,1} (interval instead of two discrete points]
+  Poly time
+  Round each x_i to either 1 or 0 depending on some predefined criteria
+  
+Set Cover
+Def: Given a universe set U = {1,...,n}
+S \subseteq 2^U s.t. union(c,S,c) = U
+Problem: minimize |c| such that c \subseteq S and union(c,S,c) = U
+ILP:
+  x_i = 1 if subset 1 is selected
+  y_ij = 1 if subset i contains element j
+  minimize sum(i,1...m,x_i)
+  Constraint: sum(i,1...m,y_ij x_i) >= 1 \forall j \in U
+Approx. algorithm:
+C = {}
+I = {}
+while(I != U):
+  select c \in S
+  C = C + c
+  I = I \cup c
+  S = S - c
+return C
+
+improvement: select c \in S s.t. c maximizes c \cap |U/I|
+Is it always optimal? NO!
+consider: U = {1,...,7}
+S = {{1,2,3,4,5},{1,2,7},{3,4,5,6}}
+It will pick the first subset even though it isn't optimal because this is a greedy approach. This happens with other greedy algorithms: the "greey" part picks something that appears locally optimal but is not globally optimal.
+
