@@ -868,3 +868,59 @@ consider: U = {1,...,7}
 S = {{1,2,3,4,5},{1,2,7},{3,4,5,6}}
 It will pick the first subset even though it isn't optimal because this is a greedy approach. This happens with other greedy algorithms: the "greey" part picks something that appears locally optimal but is not globally optimal.
 
+2018-10-30 Dominating Set
+  Def: given a graph G = (V,E), a dominating set D \subseteq V s.t. \forall v \in V\D, \exists u \in D s.t. (u,v) \in E
+Problem: minimize |D|. Not the same as vertex cover: for a fully-connected graph, minimum dominating set is has one element but vertex cover has all nodes but one
+  Problem is NP-COMPLETE
+  ILP solution:
+  D = {x_i|1 if x_i in D, 0 otherwise}
+  min(sum(i,1...n,x_i))
+  x_i + sum(j,1...n,\phi_ij(x_j)) >= 1 \forall i
+  
+ Heuristic:
+ D = {}
+ U = V #uncovered nodes
+ while U != {}:
+  Choose v \in U
+  D = D + v
+  U = U\(V \cup N(v)) #N(v) is all the neighbors of v
+ return D
+Error  bound: |D| <= (ln(\delta) + 2) * OPTIMAL_SOLN
+
+Stener Tree Problem
+  Def given a weighted graph G = (V,E), w:E->\mathbb{R}+, and a set S \subseteq V
+ Find a set of edges E' \in E s.t. G' = (V',E') is connected,S is connected, and E' has minimum cost
+ Special cases:
+  1. When S=V, we have the minimum spanning tree problem
+  2. When |S| = 2, we have the shortest-path problem
+  Anything in between is APX-HARD, which means that finding an approximated solution with factor c is NP-HARD for every c > 1
+
+Def Given G the metric ompletion G^c i a graph with the same nodes and an edge (i,J) \foreach i,j \in V and u(i,j) = length of the shortest path between i,j in G
+Thm: Given a Stener tree T that spans the nodes in S in G^c, that costs w(T), there is a Stener tree in G has cost <= w(T)
+Heuristic:
+  Build G^c
+  Consider subgraph G^c_S
+  find min. spanning tree of (MST) of G^c_S
+  return the union of the paths in MST
+  
+  Has 2-approx bound
+
+Travelling Salesman Problem
+ Def: given a undirected graph G = (V,E) and a node V, find a path that starts at v, visits all nodes once, returns to v and has minimum weight.
+ 
+ ILP solution:
+ vertices are labeled 1 to n
+ x_ij: 1 if from i -> j
+ d_ij: distance from i to j
+ 
+ min(sum(i,1...n,sum(j,1...n except i,x_ij * d_ij)))
+ sum(j,1...n,x_ij)=1 \forall i
+ sum(i,1...n,x_ij)=1 \forall j
+ x_ij=1: u_i - u_j  <= n-1
+ x_ij=0: u_i - u_j <= -1
+
+Nearest Neighbor
+  1. Start from 1
+  2. Pick closest node not on the path yet
+  3. Move it there and goto 2
+  <= 0.5 * ceil(log2(n)) * OPTIMUM_SOLUTION
