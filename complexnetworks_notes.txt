@@ -924,3 +924,40 @@ Nearest Neighbor
   2. Pick closest node not on the path yet
   3. Move it there and goto 2
   <= 0.5 * ceil(log2(n)) * OPTIMUM_SOLUTION
+
+2018-11-01
+Generalized assignment problem
+n items,m bins
+bin b_i has capacity t_i
+item e_j has weight w_j
+item e_j provides benefit p_ij if assigned to bin b_i
+ILP Solution
+  max(sum(i,1...m,sum(j,1...n,p_ij x_ij))) x_ij=1 if e_j is assigned to b_i
+  sum(j,1...n,w_j x_ij) <= t_i foreach i
+  sum(j,1...m,x_ij) = 1
+Both NP-HARD and APX-HARD
+Special cases:
+1)m=1 is the Knapsack problem
+2)t_i = 1, w_ij = 1, p_ij = 1 for all t,w, and p is the maximum bipartite matching
+Finding out that there's no solution should be fast with ILP as long as the number of constraints isn't exponential.  On some level, the solver is trying to divide the solution space into different subsets by drawing intersecting lines that represent the constraints. If there's no overlap or intersection, there's no solution.
+
+Percolation and Network Resilence
+  A fraction of 1-\phi nodes are removed. If \phi = 1, no nodes are removed. \Phi=1, all nodes are removed
+We say the network "Works" or "is functioning" if there exists a giant component S
+Configuration model: P_1, P_2,...,P_n
+Let u be the probability that a node is NOT in the GC through a particular neighbor if degree u -> u^k
+sum(k,1...inf,P_k u^k) = g_0(n) (generating function)
+S = \PHI[1-g_0(u)]
+B is not in the GC through A if
+  1)A has been removed
+  2)A is present but A is not in the GC
+Excess Degree Distributin
+  probability that after following an edge, I find a neighbor with degree u, not counting the edge I came from
+\PHI_c = <k> / <k^2> - <k>
+  If you remove more than \PHI_c nodes, there will be no giant component. If you leave \PHI_c nodes, there will be a giant component
+Examples:
+  Internet - power-law distribution
+    <k> finite as network grows
+    <k^2> diverges   '      '
+    \PHI_c = 0
+  
